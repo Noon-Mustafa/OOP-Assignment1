@@ -36,10 +36,102 @@ void applyDarkenLighten(Image& image){
 
     }
 }
+void fancyFrame(Image& image, int colorChoice)
+{
+    int width = image.width;
+    int height = image.height;
+    int outer=20;
+    int inner=12;
+    int r, g, b;
+    if (colorChoice == 1) { r = 255; g = 0; b = 0; } 
+    else if (colorChoice == 2) { r = 255; g = 165; b = 0; } 
+    else if (colorChoice == 3) { r = 255; g = 215; b = 0; } 
+    else if (colorChoice == 4) { r = 0; g = 128; b = 0; } 
+    else if (colorChoice == 5) { r = 0; g = 0; b = 255; } 
+    else if (colorChoice == 6) { r = 75; g = 0; b = 130; } 
+    else if (colorChoice == 7) { r = 238; g = 130; b = 238; } 
+    else if (colorChoice == 8) { r = 0; g = 0; b = 0; } 
+    else {
+        cout << "Invalid color choice. Using default color (Red)." << endl;
+        r = 255;
+        g = 0;
+        b = 0;
+    }
+    
+    for(int y=0; y< height;y++)
+    {
+        for(int x=0; x< width;x++)
+        {
+            if(x<=outer || x>=width-outer || y<=outer || y>=height-outer)
+            {
+                image.setPixel(x,y,0,255);
+                image.setPixel(x,y,1,255);
+                image.setPixel(x,y,2,255);
+            }
+            else if((x>=outer && x< outer+inner) || (x>=width-inner-outer && x<width-outer) || (y>=outer && y< outer+inner) || (y>=height-inner-outer && y<height-outer))
+            {
+                image.setPixel(x,y,0,r);
+                image.setPixel(x,y,1,g);
+                image.setPixel(x,y,2,b);
+            }
+        }
+    }
+}
+void frameFilter(Image& image)
+{
+    int FilterType;
+    cout <<"Please Choose Filter Type: 1.simple , 2.fancy";
+    cin >> FilterType;
+    if(FilterType==1){
+        int width = image.width;
+        int height = image.height;
+        int framesize= 20;
+        for(int y=0; y< height;y++)
+        {
+            for(int x=0; x< width;x++)
+            {
+                if(x<=framesize || x>=width-framesize || y<=framesize || y>=height-framesize)
+                {
+                    image.setPixel(x,y,0,255);
+                    image.setPixel(x,y,1,255);
+                    image.setPixel(x,y,2,255);
+                }
+            }
+        }
+    }
+    else if(FilterType==2){
+        cout<<"Choose a color: 1.Red, 2.Orange, 3.Yellow,4.Green, 5.Blue, 6.Indigo, 7.Violet, 8.Black";
+        int colorChoice;
+        cin>>colorChoice;
+        fancyFrame(image, colorChoice);
+    }
+}
+void resizeFilter(Image& image, int newWidth, int newHeight)
+{
+    Image newImage;
+    newImage.width = newWidth;
+    newImage.height = newHeight;
+    newImage.channels = 3;
+    newImage.imageData = (unsigned char*)malloc(newWidth * newHeight * 3);
+    for (int y = 0; y < newHeight; y++)
+    {
+        for (int x = 0; x < newWidth; x++)
+        {
+            int oldX = x * image.width / newWidth;
+            int oldY = y * image.height / newHeight;
+
+            newImage.setPixel(x, y, 0, image.getPixel(oldX, oldY, 0));
+            newImage.setPixel(x, y, 1, image.getPixel(oldX, oldY, 1));
+            newImage.setPixel(x, y, 2, image.getPixel(oldX, oldY, 2));
+        }
+    }
+    image = newImage;
+}
+
 
 int main(){
     string imagename;
-    cout<<"Please enter the image name";
+    cout<<"Please enter the image name: ";
     cin>>imagename;
 
      string Newimagename;
@@ -48,7 +140,7 @@ int main(){
     int userchoice =-1;
     
     while(userchoice!=0){
-        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 0.Exit";
+        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize , 0.Exit ";
     cin>>userchoice;
         switch (userchoice)
     {
@@ -60,9 +152,20 @@ int main(){
     case 2:
        applyDarkenLighten(image);
        break;
-    
+
+    case 3:
+        frameFilter(image);
+        break;
+    case 4:
+        int newWidth, newHeight;
+        cout<<"Please enter new width: ";
+        cin >>newWidth;
+        cout<<"Please enter new height: ";
+        cin>>newHeight;
+        resizeFilter(image, newWidth, newHeight);
+        break;
     case 0:
-    cout<<"Please enter the new image name with extention to save:";
+    cout<<"Please enter the new image name with extention to save: ";
     cin>>Newimagename;
     image.saveImage(Newimagename);
     break;
