@@ -199,7 +199,6 @@ int main(){
 
      string Newimagename;
     
-    Image image(imagename);
 
     stack<Image> undoStack;
     stack<Image> redoStack;
