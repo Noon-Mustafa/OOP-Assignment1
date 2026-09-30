@@ -54,8 +54,11 @@ for (int i = 0; i < image.width; ++i) {
         }
     }
 }
-void applyflip(Image& image)
- for (int i = 0; i < width / 2; ++i) {
+void applyflip(Image& image) {
+    int width = image.width;
+    int height = image.height;
+    
+    for (int i = 0; i < width / 2; ++i) {
         for (int j = 0; j < height; ++j) {
             for (int k = 0; k < image.channels; ++k) {
                 unsigned char temp = image(i, j, k);
