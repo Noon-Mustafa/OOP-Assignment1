@@ -36,6 +36,35 @@ void applyDarkenLighten(Image& image){
 
     }
 }
+void applygray (Image& image)
+for (int i = 0; i < image.width; ++i) {
+        for (int j = 0; j < image.height; ++j) {
+            
+            unsigned int avg = 0;
+            
+            for (int k = 0; k < image.channels; ++k) {
+                avg += image(i, j, k);
+            }
+            
+            avg = avg / 3;
+            
+            for (int k = 0; k < 3; ++k) {
+                image(i, j, k) = avg;
+            }
+        }
+    }
+}
+void applyflip(Image& image)
+ for (int i = 0; i < width / 2; ++i) {
+        for (int j = 0; j < height; ++j) {
+            for (int k = 0; k < image.channels; ++k) {
+                unsigned char temp = image(i, j, k);
+                image(i, j, k) = image(width - 1 - i, j, k);
+                image(width - 1 - i, j, k) = temp;
+            }
+        }
+    }
+}
 void fancyFrame(Image& image, int colorChoice)
 {
     int width = image.width;
