@@ -183,7 +183,7 @@ int main(){
     int userchoice =-1;
     
     while(userchoice!=0){
-        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize , 9.Undo , 10.Redo , 0.Exit\n";
+        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 9.Undo , 10.Redo , 0.Exit\n";
     cin>>userchoice;
         switch (userchoice)
     {
@@ -222,6 +222,21 @@ int main(){
         cout<<"Please enter new height: ";
         cin>>newHeight;
         resizeFilter(image, newWidth, newHeight);
+        break;
+    case 5:
+          undoStack.push(image);
+        while(!redoStack.empty()) {
+            redoStack.pop();
+        }
+        applygray(image);
+        break;
+
+    case 6:
+          undoStack.push(image);
+        while(!redoStack.empty()) {
+            redoStack.pop();
+        }
+        applyflip(image);
         break;
     
     case 9:
