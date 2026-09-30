@@ -170,9 +170,32 @@ void resizeFilter(Image& image, int newWidth, int newHeight)
 
 
 int main(){
-    string imagename;
-    cout<<"Please enter the image name: ";
-    cin>>imagename;
+    string filename;
+    int iext;
+    string ext;
+    Image image;
+    while(true){
+        cout<<"Please enter the image file name: "<<endl;
+        cin>>filename;
+        ext="";
+        iext=filename.find_last_of(".");
+        if (iext!=string::npos){
+            ext=filename.substr(iext);
+        }
+         if(ext==".jpg" || ext==".png" || ext==".bmp" || ext==".tga"|| ext==".jpeg"){
+             try{image.loadNewImage(filename);
+                cout<<"Image loaded successfully! "<<endl;  
+               break;  }
+               catch(...){ cout<<"File not found!"<<endl;}
+            }
+                         
+        else{
+      
+         cout<<"This extention is invalid,please enter the a valid extention"<<endl;
+            }
+       
+    }
+
 
      string Newimagename;
     
