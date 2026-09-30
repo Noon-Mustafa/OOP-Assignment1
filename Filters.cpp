@@ -17,6 +17,7 @@ void applyInvert(Image& image){
         }
     }
 }
+//***/ /***//***//***//***//***//
 void applyDarkenandLighten (Image& image){
     float userpercentage;
     cout<<"Please enter the lighten(+) or darken(-) percentage";
@@ -37,6 +38,7 @@ void applyDarkenandLighten (Image& image){
 
     }
 }
+//***/ /***//***//***//***//***//
 void applygray (Image& image){
 for (int i = 0; i < image.width; ++i) {
         for (int j = 0; j < image.height; ++j) {
@@ -55,6 +57,7 @@ for (int i = 0; i < image.width; ++i) {
         }
     }
 }
+//***/ /***//***//***//***//***//
 void applyflip(Image& image) {
     int width = image.width;
     int height = image.height;
@@ -69,6 +72,7 @@ void applyflip(Image& image) {
         }
     }
 }
+//***/ /***//***//***//***//***//
 void fancyFrame(Image& image, int colorChoice)
 {
     int width = image.width;
@@ -110,6 +114,7 @@ void fancyFrame(Image& image, int colorChoice)
         }
     }
 }
+//***/ /***//***//***//***//***//
 void frameFilter(Image& image)
 {
     int FilterType;
@@ -139,6 +144,7 @@ void frameFilter(Image& image)
         fancyFrame(image, colorChoice);
     }
 }
+//***/ /***//***//***//***//***//
 void resizeFilter(Image& image, int newWidth, int newHeight)
 {
     Image newImage;
@@ -160,6 +166,7 @@ void resizeFilter(Image& image, int newWidth, int newHeight)
     }
     image = newImage;
 }
+//***/ /***//***//***//***//***//
 
 
 int main(){
