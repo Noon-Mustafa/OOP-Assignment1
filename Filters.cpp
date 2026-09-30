@@ -1,5 +1,6 @@
 # include <iostream>
 # include "Image_Class.h"
+#include <stack>
 using namespace std;
 
 void applyInvert(Image& image){
@@ -36,7 +37,7 @@ void applyDarkenLighten(Image& image){
 
     }
 }
-void applygray (Image& image)
+void applygray (Image& image){
 for (int i = 0; i < image.width; ++i) {
         for (int j = 0; j < image.height; ++j) {
             
@@ -112,7 +113,7 @@ void fancyFrame(Image& image, int colorChoice)
 void frameFilter(Image& image)
 {
     int FilterType;
-    cout <<"Please Choose Filter Type: 1.simple , 2.fancy";
+    cout <<"Please Choose Filter Type: 1.simple , 2.fancy\n";
     cin >> FilterType;
     if(FilterType==1){
         int width = image.width;
@@ -132,7 +133,7 @@ void frameFilter(Image& image)
         }
     }
     else if(FilterType==2){
-        cout<<"Choose a color: 1.Red, 2.Orange, 3.Yellow,4.Green, 5.Blue, 6.Indigo, 7.Violet, 8.Black";
+        cout<<"Choose a color: 1.Red, 2.Orange, 3.Yellow,4.Green, 5.Blue, 6.Indigo, 7.Violet, 8.Black\n";
         int colorChoice;
         cin>>colorChoice;
         fancyFrame(image, colorChoice);
@@ -169,26 +170,45 @@ int main(){
      string Newimagename;
     
     Image image(imagename);
+
+    stack<Image> undoStack;
+    stack<Image> redoStack;
     int userchoice =-1;
     
     while(userchoice!=0){
-        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize , 0.Exit ";
+        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize , 9.Undo , 10.Redo , 0.Exit\n";
     cin>>userchoice;
         switch (userchoice)
     {
         
     case 1:
+        undoStack.push(image);
+        while(!redoStack.empty()) {
+            redoStack.pop();
+        }
         applyInvert(image);
         break;
     
     case 2:
+        undoStack.push(image);
+        while(!redoStack.empty()) {
+            redoStack.pop();
+        }
        applyDarkenLighten(image);
        break;
 
     case 3:
+        undoStack.push(image);
+        while(!redoStack.empty()) {
+            redoStack.pop();
+        }
         frameFilter(image);
         break;
     case 4:
+        undoStack.push(image);
+        while(!redoStack.empty()) {
+            redoStack.pop();
+        }
         int newWidth, newHeight;
         cout<<"Please enter new width: ";
         cin >>newWidth;
@@ -196,6 +216,27 @@ int main(){
         cin>>newHeight;
         resizeFilter(image, newWidth, newHeight);
         break;
+    
+    case 9:
+        if(!undoStack.empty()) {
+            redoStack.push(image);
+            image = undoStack.top();
+            undoStack.pop();
+        } else {
+            cout << "No actions to undo." << endl;
+        }
+        break;
+
+    case 10:
+        if(!redoStack.empty()) {
+            undoStack.push(image);
+            image = redoStack.top();
+            redoStack.pop();
+        } else {
+            cout << "No actions to redo." << endl;
+        }
+        break;
+    
     case 0:
     cout<<"Please enter the new image name with extention to save: ";
     cin>>Newimagename;
