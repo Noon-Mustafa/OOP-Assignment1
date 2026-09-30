@@ -17,7 +17,7 @@ void applyInvert(Image& image){
         }
     }
 }
-void applyDarkenLighten(Image& image){
+void applyDarkenandLighten (Image& image){
     float userpercentage;
     cout<<"Please enter the lighten(+) or darken(-) percentage";
     cin>>userpercentage;
@@ -194,7 +194,7 @@ int main(){
         while(!redoStack.empty()) {
             redoStack.pop();
         }
-       applyDarkenLighten(image);
+        applyDarkenandLighten(image);
        break;
 
     case 3:
