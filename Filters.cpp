@@ -292,7 +292,7 @@ int main(){
         cout<<"Do you want to save current image before loading new one? (1.yes / 2.no)"<<endl;
         cin>>choice;
         if (choice==1){
-            cout<<"Do you want to save to the same file(1),or enter a new file name"<<endl;
+            cout<<"Do you want to save to the same file(1),or enter a new file name(2)"<<endl;
             cin>>savechoice;
             if(savechoice==1){
                 image.saveImage(filename);
@@ -313,7 +313,7 @@ int main(){
         break;
      
     case 12:
-        cout<<"Do you want to save to the same file(1),or enter a new file name"<<endl;
+        cout<<"Do you want to save to the same file(1),or enter a new file name(2)"<<endl;
         cin>>savechoice;
          if(savechoice==1){
                 image.saveImage(filename);
@@ -331,7 +331,7 @@ int main(){
     cout<<"Do you want to save the current image before exiting? 1.yes,2.no"<<endl;
     cin>>choice;
     if(choice==1){
-        cout<<"Do you want to save to the same file(1),or enter a new file name"<<endl;
+        cout<<"Do you want to save to the same file(1),or enter a new file name(2)"<<endl;
         cin>>savechoice;
          if(savechoice==1){
                 image.saveImage(filename);
