@@ -201,7 +201,9 @@ int main(){
     string filename;
     Image image;
     loadimage(image,filename);
-     string Newimagename;
+    Image OriginalImage=image;
+    string Newimagename;
+
     
 
     stack<Image> undoStack;
@@ -213,143 +215,149 @@ int main(){
     
     while(userchoice!=0){
         cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 9.Undo , 10.Redo , 11.load new image, 12.save current image, 0.Exit\n";
-    cin>>userchoice;
+        cin>>userchoice;
         switch (userchoice)
-    {
-        
-    case 1:
-        undoStack.push(image);
-        while(!redoStack.empty()) {
-            redoStack.pop();
-        }
-        applyInvert(image);
-        break;
+        {    
+            case 1:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                applyInvert(image);
+                break;
     
-    case 2:
-        undoStack.push(image);
-        while(!redoStack.empty()) {
-            redoStack.pop();
-        }
-        applyDarkenandLighten(image);
-       break;
+            case 2:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                applyDarkenandLighten(image);
+                break;
 
-    case 3:
-        undoStack.push(image);
-        while(!redoStack.empty()) {
-            redoStack.pop();
-        }
-        frameFilter(image);
-        break;
-    case 4:
-        undoStack.push(image);
-        while(!redoStack.empty()) {
-            redoStack.pop();
-        }
-        int newWidth, newHeight;
-        cout<<"Please enter new width: ";
-        cin >>newWidth;
-        cout<<"Please enter new height: ";
-        cin>>newHeight;
-        resizeFilter(image, newWidth, newHeight);
-        break;
-    case 5:
-          undoStack.push(image);
-        while(!redoStack.empty()) {
-            redoStack.pop();
-        }
-        applygray(image);
-        break;
+            case 3:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                frameFilter(image);
+                 break;
+            case 4:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                int newWidth, newHeight;
+                cout<<"Please enter new width: ";
+                cin >>newWidth;
+                cout<<"Please enter new height: ";
+                cin>>newHeight;
+                resizeFilter(image, newWidth, newHeight);
+                break;
+            case 5:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                applygray(image);
+                break;
 
-    case 6:
-          undoStack.push(image);
-        while(!redoStack.empty()) {
-            redoStack.pop();
-        }
-        applyflip(image);
-        break;
+            case 6:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                applyflip(image);
+                break;
     
-    case 9:
-        if(!undoStack.empty()) {
-            redoStack.push(image);
-            image = undoStack.top();
-            undoStack.pop();
-        } else {
-            cout << "No actions to undo." << endl;
-        }
-        break;
+            case 9:
+                if(!undoStack.empty()) {
+                    redoStack.push(image);
+                    image = undoStack.top();
+                    undoStack.pop();
+                } 
+                else {
+                    cout << "No actions to undo." << endl;
+                }
+                break;
 
-    case 10:
-        if(!redoStack.empty()) {
-            undoStack.push(image);
-            image = redoStack.top();
-            redoStack.pop();
-        } else {
-            cout << "No actions to redo." << endl;
-        }
-        break;
+            case 10:
+                if(!redoStack.empty()) {
+                    undoStack.push(image);
+                    image = redoStack.top();
+                    redoStack.pop();
+                } 
+                else {
+                    cout << "No actions to redo." << endl;
+                }
+                break;
     
-    case 11:
-        cout<<"Do you want to save current image before loading new one? (1.yes / 2.no)"<<endl;
-        cin>>choice;
-        if (choice==1){
-            cout<<"Do you want to save to the same file(1),or enter a new file name(2)"<<endl;
-            cin>>savechoice;
-            if(savechoice==1){
-                image.saveImage(filename);
-            } 
-            else if(savechoice==2){
-                cout<<"Please enter the new image name with extention to save: ";
-                cin>>Newimagename;
-                image.saveImage(Newimagename);
-            }
-        }
-        loadimage(image,filename);
-        while(!undoStack.empty()){
-            undoStack.pop();
-        }
-        while(!redoStack.empty()){
-            redoStack.pop();
-        }
-        break;
+            case 11:
+                cout<<"Do you want to save current image before loading new one? (1.yes / 2.no)"<<endl;
+                cin>>choice;
+                if (choice==1){
+                    cout<<"Do you want to save to the same file(1),or enter a new file name(2)"<<endl;
+                    cin>>savechoice;
+                    if(savechoice==1){
+                        image.saveImage(filename);
+                    } 
+                    else if(savechoice==2){
+                        cout<<"Please enter the new image name with extention to save: ";
+                        cin>>Newimagename;
+                        image.saveImage(Newimagename);
+                    }
+                }
+                loadimage(image,filename);
+                OriginalImage=image;
+                while(!undoStack.empty()){
+                    undoStack.pop();
+                }
+                while(!redoStack.empty()){
+                    redoStack.pop();
+                }
+                break;
      
-    case 12:
-        cout<<"Do you want to save to the same file(1),or enter a new file name(2)"<<endl;
-        cin>>savechoice;
-         if(savechoice==1){
-                image.saveImage(filename);
-            } 
-            else if(savechoice==2){
-                cout<<"Please enter the new image name with extention to save: ";
-                cin>>Newimagename;
-                image.saveImage(Newimagename);
-            }
-        
-       
-        break;
+            case 12:
+                cout<<"Do you want to save to the same file(1),or enter a new file name(2)"<<endl;
+                cin>>savechoice;
+                if(savechoice==1){
+                    image.saveImage(filename);
+                    cout<<"Image saved successfully!"<<endl;
+                } 
+                else if(savechoice==2){
+                    cout<<"Please enter the new image name with extention to save: ";
+                    cin>>Newimagename;
+                    image.saveImage(Newimagename);
+                    filename=Newimagename;
+                    cout<<"Image saved successfully!"<<endl;
+                }
+                break;
 
-    case 0:
-    cout<<"Do you want to save the current image before exiting? 1.yes,2.no"<<endl;
-    cin>>choice;
-    if(choice==1){
-        cout<<"Do you want to save to the same file(1),or enter a new file name(2)"<<endl;
-        cin>>savechoice;
-         if(savechoice==1){
-                image.saveImage(filename);
-                cout<<"Goodbye";
-            } 
-            else if(savechoice==2){
-                cout<<"Please enter the new image name with extention to save: ";
-                cin>>Newimagename;
-                image.saveImage(Newimagename);
-            }
-        
-    }
-    else if (choice==2) cout<<"Goodbye!!!";
-    break;
+            case 0:
+                cout<<"Do you want to save the current image before exiting? 1.yes,2.no"<<endl;
+                cin>>choice;
+                if(choice==1){
+                    cout<<"Do you want to save to the same file(1),or enter a new file name(2)"<<endl;
+                    cin>>savechoice;
+                    if(savechoice==1){
+                        image.saveImage(filename);
+                    } 
+                    else if(savechoice==2){
+                        cout<<"Please enter the new image name with extention to save: ";
+                        cin>>Newimagename;
+                        image.saveImage(Newimagename);
+                    }
+                }   
+                else if (choice==2){
+                    image=OriginalImage;
+                    image.saveImage(filename);
+                    cout<<"Goodbye!!!";
+                }
+                break;
 
-    default:
-    cout<<"Invaild choice!!";
-        break;
+            default:
+                cout<<"Invaild choice!!";
+                break;
+        }
     }
-    }
+    return 0;
 }
