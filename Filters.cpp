@@ -3,6 +3,85 @@
 #include <stack>
 using namespace std;
 
+void makeBlackWhite(Image& img)
+{
+    const int limit= 128;
+
+    for (int row = 0; row < img.height; row++)
+    {
+        for (int col = 0; col < img.width; col++)
+        {
+            int r = img.getPixel(col, row, 0);
+            int g = img.getPixel(col, row, 1);
+            int b = img.getPixel(col, row, 2);
+
+            int average = (r + g + b) /3;
+
+            if (average>=limit)
+            {
+                img.setPixel(col, row, 0, 255);
+                img.setPixel(col, row, 1, 255);
+                img.setPixel(col, row, 2, 255);
+            }
+            else
+            {
+                img.setPixel(col, row, 0, 0);
+                img.setPixel(col, row, 1, 0);
+                img.setPixel(col, row, 2, 0);
+            }
+        }
+    }
+}
+//***/ /***//***//***//***//***//
+void detectEdges(Image& img)
+{
+
+    for (int row = 0; row < img.height; row++)
+    {
+        for (int col = 0; col < img.width; col++)
+        {
+            int r = img.getPixel(col, row, 0);
+            int g = img.getPixel(col, row, 1);
+            int b = img.getPixel(col, row, 2);
+
+            int brightness = (r + g + b) / 3;
+
+            img.setPixel(col, row, 0, brightness);
+            img.setPixel(col, row, 1, brightness);
+            img.setPixel(col, row, 2, brightness);
+        }
+    }
+
+    for (int row = 1; row < img.height - 1; row++)
+    {
+        for (int col = 1; col < img.width - 1; col++)
+        {
+            int currentPixel = img.getPixel(col, row, 0);
+
+            int nextPixel = img.getPixel(col + 1, row, 0);
+            int lowerPixel = img.getPixel(col, row + 1, 0);
+
+            int horizontalChange = abs(currentPixel - nextPixel);
+            int verticalChange = abs(currentPixel - lowerPixel);
+
+            int edgeStrength = horizontalChange + verticalChange;
+
+            if (edgeStrength > 40)
+            {
+                img.setPixel(col, row, 0, 0);
+                img.setPixel(col, row, 1, 0);
+                img.setPixel(col, row, 2, 0);
+            }
+            else
+            {
+                img.setPixel(col, row, 0, 255);
+                img.setPixel(col, row, 1, 255);
+                img.setPixel(col, row, 2, 255);
+            }
+        }
+    }
+}
+//***/ /***//***//***//***//***//
 void applyInvert(Image& image){
     for (int i=0;i<image.width;i++)
     {
@@ -214,7 +293,7 @@ int main(){
     int savechoice=-1;
     
     while(userchoice!=0){
-        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 9.Undo , 10.Redo , 11.load new image, 12.save current image, 0.Exit\n";
+        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Undo , 10.Redo , 11.load new image, 12.save current image, 0.Exit\n";
         cin>>userchoice;
         switch (userchoice)
         {    
@@ -267,6 +346,22 @@ int main(){
                     redoStack.pop();
                 }
                 applyflip(image);
+                break;
+
+            case 7:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                makeBlackWhite(image);
+                break;
+
+            case 8:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                detectEdges(image);
                 break;
     
             case 9:
