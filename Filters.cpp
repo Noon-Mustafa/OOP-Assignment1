@@ -168,12 +168,9 @@ void resizeFilter(Image& image, int newWidth, int newHeight)
 }
 //***/ /***//***//***//***//***//
 
-
-int main(){
-    string filename;
+void loadimage(Image& image, string& filename){
     int iext;
     string ext;
-    Image image;
     while(true){
         cout<<"Please enter the image file name: "<<endl;
         cin>>filename;
@@ -197,15 +194,25 @@ int main(){
     }
 
 
+}
+
+
+int main(){
+    string filename;
+    Image image;
+    loadimage(image,filename);
      string Newimagename;
     
 
     stack<Image> undoStack;
     stack<Image> redoStack;
     int userchoice =-1;
+
+    int choice=-1;
+    int savechoice=-1;
     
     while(userchoice!=0){
-        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 9.Undo , 10.Redo , 0.Exit\n";
+        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 9.Undo , 10.Redo , 11.load new image, 12.save current image, 0.Exit\n";
     cin>>userchoice;
         switch (userchoice)
     {
@@ -281,10 +288,63 @@ int main(){
         }
         break;
     
+    case 11:
+        cout<<"Do you want to save current image before loading new one? (1.yes / 2.no)"<<endl;
+        cin>>choice;
+        if (choice==1){
+            cout<<"Do you want to save to the same file(1),or enter a new file name"<<endl;
+            cin>>savechoice;
+            if(savechoice==1){
+                image.saveImage(filename);
+            } 
+            else if(savechoice==2){
+                cout<<"Please enter the new image name with extention to save: ";
+                cin>>Newimagename;
+                image.saveImage(Newimagename);
+            }
+        }
+        loadimage(image,filename);
+        while(!undoStack.empty()){
+            undoStack.pop();
+        }
+        while(!redoStack.empty()){
+            redoStack.pop();
+        }
+        break;
+     
+    case 12:
+        cout<<"Do you want to save to the same file(1),or enter a new file name"<<endl;
+        cin>>savechoice;
+         if(savechoice==1){
+                image.saveImage(filename);
+            } 
+            else if(savechoice==2){
+                cout<<"Please enter the new image name with extention to save: ";
+                cin>>Newimagename;
+                image.saveImage(Newimagename);
+            }
+        
+       
+        break;
+
     case 0:
-    cout<<"Please enter the new image name with extention to save: ";
-    cin>>Newimagename;
-    image.saveImage(Newimagename);
+    cout<<"Do you want to save the current image before exiting? 1.yes,2.no"<<endl;
+    cin>>choice;
+    if(choice==1){
+        cout<<"Do you want to save to the same file(1),or enter a new file name"<<endl;
+        cin>>savechoice;
+         if(savechoice==1){
+                image.saveImage(filename);
+                cout<<"Goodbye";
+            } 
+            else if(savechoice==2){
+                cout<<"Please enter the new image name with extention to save: ";
+                cin>>Newimagename;
+                image.saveImage(Newimagename);
+            }
+        
+    }
+    else if (choice==2) cout<<"Goodbye!!!";
     break;
 
     default:
@@ -292,5 +352,4 @@ int main(){
         break;
     }
     }
-    
 }
