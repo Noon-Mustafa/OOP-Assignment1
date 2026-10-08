@@ -1,67 +1,46 @@
 #include "Image_Class.h"
 #include <iostream>
-#include <cstdlib>
-
 using namespace std;
 
-void detectEdges(Image& img)
+void rotate(Image& image, int angle)
 {
+    int times = angle / 90;
 
-    for (int row = 0; row < img.height; row++)
+    for (int i = 0; i < times; i++)
     {
-        for (int col = 0; col < img.width; col++)
+        Image rotated(image.height, image.width);
+
+        for (int y = 0; y < image.height; y++)
         {
-            int r = img.getPixel(col, row, 0);
-            int g = img.getPixel(col, row, 1);
-            int b = img.getPixel(col, row, 2);
-
-            int brightness = (r + g + b) / 3;
-
-            img.setPixel(col, row, 0, brightness);
-            img.setPixel(col, row, 1, brightness);
-            img.setPixel(col, row, 2, brightness);
-        }
-    }
-
-    for (int row = 1; row < img.height - 1; row++)
-    {
-        for (int col = 1; col < img.width - 1; col++)
-        {
-            int currentPixel = img.getPixel(col, row, 0);
-
-            int nextPixel = img.getPixel(col + 1, row, 0);
-            int lowerPixel = img.getPixel(col, row + 1, 0);
-
-            int horizontalChange = abs(currentPixel - nextPixel);
-            int verticalChange = abs(currentPixel - lowerPixel);
-
-            int edgeStrength = horizontalChange + verticalChange;
-
-            if (edgeStrength > 40)
+            for (int x = 0; x < image.width; x++)
             {
-                img.setPixel(col, row, 0, 0);
-                img.setPixel(col, row, 1, 0);
-                img.setPixel(col, row, 2, 0);
-            }
-            else
-            {
-                img.setPixel(col, row, 0, 255);
-                img.setPixel(col, row, 1, 255);
-                img.setPixel(col, row, 2, 255);
+                for (int c = 0; c < 3; c++)
+                {
+                    rotated.setPixel(
+                        image.height - 1 - y,
+                        x,
+                        c,
+                        image.getPixel(x, y, c)
+                    );
+                }
             }
         }
+
+        image = rotated;
     }
 }
 
 int main()
 {
-    Image img("night3.jpg");
+    Image image("night3.jpg");
 
-    detectEdges(img);
+    int angle;
+    cout << "Enter angle (90, 180, 270): ";
+    cin >> angle;
 
-    img.saveImage("night3_edges.jpg");
+    rotate(image, angle);
 
-    cout << "Edge detection completed." << endl;
+    image.saveImage("night3_rotated.jpg");
 
-    return 0;
+    cout << "Image rotated successfully!";
 }
