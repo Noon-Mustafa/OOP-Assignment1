@@ -3,6 +3,129 @@
 #include <stack>
 using namespace std;
 
+void oilPaint(Image& image)
+{
+    int radius;
+    cout<<"Please enter the radius for the oil painting effect (1-10): ";
+    cin>>radius;
+    while (radius<1||radius>10) {
+        cout<<"Invalid radius. Please enter a value between 1 and 10: ";
+        cin>>radius;
+    }
+    int width =image.width;
+    int height =image.height;
+    Image original =image;
+
+    for (int x=0; x<width; x++)
+    {
+        for (int y=0; y<height; y++)
+        {
+            int colorCount[256][3]= {0};
+            int count[256]= {0};
+            int maxCount = 0;
+            int dominantColor[3]= {0};
+
+            for (int dx= -radius; dx<=radius; dx++)
+            {
+                for (int dy= -radius; dy<= radius; dy++)
+                {
+                    int nx= x + dx;
+                    int ny= y + dy;
+
+                    if (nx>=0 && nx<width &&
+                        ny>=0 && ny<height)
+                    {
+                        int r=original(nx, ny, 0);
+                        int g=original(nx, ny, 1);
+                        int b=original(nx, ny, 2);
+
+                        int intensity= (r + g + b)/3;
+                        count[intensity]++;
+                        colorCount[intensity][0]+= r;
+                        colorCount[intensity][1]+= g;
+                        colorCount[intensity][2]+= b;
+                    }
+                }
+            }
+            int dominantIntensity= 0;
+            for (int i= 0; i< 256; i++)
+            {
+                if (count[i]> maxCount)
+                {
+                    maxCount=count[i];
+                    dominantIntensity= i;
+                }
+            }
+            if (maxCount>0)
+            {
+                dominantColor[0] =colorCount[dominantIntensity][0]/maxCount;
+                dominantColor[1] =colorCount[dominantIntensity][1]/maxCount;
+                dominantColor[2] =colorCount[dominantIntensity][2]/maxCount;
+            }
+            image(x, y, 0) =dominantColor[0];
+            image(x, y, 1) =dominantColor[1];
+            image(x, y, 2) =dominantColor[2];
+        }
+    }
+}
+//***/ /***//***//***//***//***//
+void InfraredFilter(Image& image)
+{
+    for (int i=0;i<image.width;i++)
+    {
+        for (int j=0;j<image.height;j++)
+        {
+            int r=image.getPixel(i,j,0);
+            int g=image.getPixel(i,j,1);
+            int b=image.getPixel(i,j,2);
+
+            image.setPixel(i,j,0,255);
+            image.setPixel(i,j,1,255-g);
+            image.setPixel(i,j,2,255-b);
+        }
+    }   
+}
+//***/ /***//***//***//***//***//
+void BlurFilter(Image& image)
+{
+    int level;
+    cout<< "Please enter the blur level (1-5): ";
+    cin>> level;
+
+    while (level<1 || level>5) {
+        cout << "Invalid blur level. Please enter a value between 1 and 5: ";
+        cin>>level;
+    }
+    Image original=image;
+    int radius= level;
+    for (int y=radius; y<image.height-radius; y++)
+    {
+        for (int x=radius; x<image.width - radius; x++)
+        {
+            int sumR= 0, sumG= 0, sumB= 0;
+            int count= 0;
+
+            for (int ky=-radius; ky<=radius; ky++)
+            {
+                for (int kx=-radius; kx<=radius; kx++)
+                {
+                    int pixelX= x + kx;
+                    int pixelY= y + ky;
+
+                    sumR +=original.getPixel(pixelX, pixelY, 0);
+                    sumG +=original.getPixel(pixelX, pixelY, 1);
+                    sumB +=original.getPixel(pixelX, pixelY, 2);
+                    count++;
+                }
+            }
+
+            image.setPixel(x, y, 0, sumR/count);
+            image.setPixel(x, y, 1, sumG/count);
+            image.setPixel(x, y, 2, sumB/count);
+        }
+    }
+}
+//***/ /***//***//***//***//***//
 void makeBlackWhite(Image& img)
 {
     const int limit= 128;
@@ -293,7 +416,7 @@ int main(){
     int savechoice=-1;
     
     while(userchoice!=0){
-        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Undo , 10.Redo , 11.load new image, 12.save current image, 0.Exit\n";
+        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Blur, 10.Infrared, 18.OilPaint, 19.Undo, 20.Redo, 21.load new image, 22.save current image, 0.Exit\n";
         cin>>userchoice;
         switch (userchoice)
         {    
@@ -365,6 +488,30 @@ int main(){
                 break;
     
             case 9:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                BlurFilter(image);
+                break;
+
+            case 10:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                InfraredFilter(image);
+                break;
+                
+            case 18:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                oilPaint(image);
+                break;
+
+            case 19:
                 if(!undoStack.empty()) {
                     redoStack.push(image);
                     image = undoStack.top();
@@ -375,7 +522,7 @@ int main(){
                 }
                 break;
 
-            case 10:
+            case 20:
                 if(!redoStack.empty()) {
                     undoStack.push(image);
                     image = redoStack.top();
@@ -385,8 +532,8 @@ int main(){
                     cout << "No actions to redo." << endl;
                 }
                 break;
-    
-            case 11:
+
+            case 21:
                 cout<<"Do you want to save current image before loading new one? (1.yes / 2.no)"<<endl;
                 cin>>choice;
                 if (choice==1){
@@ -411,7 +558,7 @@ int main(){
                 }
                 break;
      
-            case 12:
+            case 22:
                 cout<<"Do you want to save to the same file(1),or enter a new file name(2)"<<endl;
                 cin>>savechoice;
                 if(savechoice==1){
