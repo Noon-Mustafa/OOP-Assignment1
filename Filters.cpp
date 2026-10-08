@@ -3,6 +3,64 @@
 #include <stack>
 using namespace std;
 
+void purple(Image& image){
+for(int i=0;i<image.height;i++){
+
+        for(int j=0;j<image.width;j++){
+
+                int red=image(j,i,0);
+                red=red*1.2;
+
+                int green=image(j,i,1);
+                green=green*0.2;
+
+                int blue=image(j,i,2);
+                blue=blue*1.5;
+
+                if (blue>255) blue=255;
+                if (red>255)  red=255;
+
+                image(j,i,0)=red;
+                image(j,i,1)=green;
+                image(j,i,2)=blue;
+
+            
+        }
+    }
+}
+
+//***/ /***//***//***//***//***//
+
+void crop(Image& image){
+
+     cout<<"The image width is:"<<image.width<<"and height is:"<<image.height<<endl;
+
+    int height , width;
+    cout<<"please enter the hight and width"<<endl;
+    cin>> height >> width;
+
+    int start_row ,start_coloum;
+    cout<<"please enter the start point in rows and in coloums"<<endl;
+    cin>>start_row>>start_coloum;
+    Image croppedimage( width ,height);
+    if(image.width>=start_coloum+width && start_coloum>=0 && image.height>=start_row+height && start_row>=0){
+         for (int i=0;i<= croppedimage.height-1;i++){
+        for (int j=0;j<= croppedimage.width-1;j++){
+            for (int k=0; k<croppedimage.channels;k++){
+                
+              croppedimage(j,i,k)=  image(start_coloum+j,start_row+i,k);
+                }
+
+
+            }
+        }
+        image=croppedimage;
+    }else{
+        cout<<"invalid daimenions";
+    }
+}
+//***/ /***//***//***//***//***//
+
 void oilPaint(Image& image)
 {
     int radius;
@@ -416,7 +474,7 @@ int main(){
     int savechoice=-1;
     
     while(userchoice!=0){
-        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Blur, 10.Infrared, 18.OilPaint, 19.Undo, 20.Redo, 21.load new image, 22.save current image, 0.Exit\n";
+        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Blur, 10.Infrared, 11.crop, 12.purple, 18.OilPaint, 19.Undo, 20.Redo, 21.load new image, 22.save current image, 0.Exit\n";
         cin>>userchoice;
         switch (userchoice)
         {    
@@ -502,7 +560,22 @@ int main(){
                 }
                 InfraredFilter(image);
                 break;
-                
+            case 11:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                crop(image);
+                break;
+
+            case 12:
+            undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                purple(image);
+                break;
+    
             case 18:
                 undoStack.push(image);
                 while(!redoStack.empty()) {
