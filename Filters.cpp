@@ -672,7 +672,7 @@ int main(){
     int savechoice=-1;
     
     while(userchoice!=0){
-        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Blur, 10.Infrared, 11.crop, 12.purple, 13.OldTV, 14.Rotate, 15.Merge, 17.Skew, 18.OilPaint, 19.Undo, 20.Redo, 21.load new image, 22.save current image, 0.Exit\n";
+        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Blur, 10.Infrared, 11.crop, 12.purple, 13.OldTV, 14.Rotate, 15.Merge, 16. sunlight,  17.Skew, 18.OilPaint, 19.Undo, 20.Redo, 21.load new image, 22.save current image, 0.Exit\n";
         cin>>userchoice;
         switch (userchoice)
         {    
@@ -797,7 +797,14 @@ int main(){
                 }
                 applyMerge(image);
                 break;
-
+          case 16:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                sunlight(image);
+                 break;
+          
             case 17:
                 undoStack.push(image);
                 while(!redoStack.empty()) {
