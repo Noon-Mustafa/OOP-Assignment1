@@ -90,15 +90,8 @@ void applyRotate45(Image& image) {
     }
 }
 
-int main() {
-    Image image("luffy.jpg");
-    
-    applyRotate45(image);
-    
-    image.saveImage("luffy_rotated.jpg");
-    
-    return 0;
-}
+//***/ /***//***//***//***//***//
+void skew(Image& image){
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
@@ -118,6 +111,7 @@ int main() {
     image = result;
 
     cout << "Skew filter applied successfully!" << endl;
+}
 }
 
 //***/ /***//***//***//***//***//
