@@ -1,17 +1,37 @@
 # include <iostream>
 # include "Image_Class.h"
 #include <stack>
+#include <cmath>
 using namespace std;
 
+ 
 void Skew(Image& image)
 {
     int angle;
-    cout << "Enter skew angle: ";
+    cout << "Enter skew angle (-45 to 45): ";
     cin >> angle;
+
+    if (angle < -45 || angle > 45)
+    {
+        cout << "Invalid angle!" << endl;
+        return;
+    }
+
+    if (angle == 0)
+        return;
+
     int width = image.width;
     int height = image.height;
 
-    Image result(width + height, height);
+    double rad = angle * 3.14159265 / 180.0;
+    double skewFactor = tan(rad);
+
+    int extraWidth = static_cast<int>(
+        ceil(height * abs(skewFactor))
+    );
+
+    Image result(width + extraWidth, height);
+
 
     for (int y = 0; y < result.height; y++)
     {
@@ -23,6 +43,37 @@ void Skew(Image& image)
             }
         }
     }
+
+    for (int y = 0; y < height; y++)
+    {
+        int shift = static_cast<int>(
+            round((height - 1 - y) * abs(skewFactor))
+        );
+
+        for (int x = 0; x < width; x++)
+        {
+            int newX;
+
+            if (angle > 0)
+                newX = x + shift;
+            else
+                newX = x + extraWidth - shift;
+
+            if (newX >= 0 && newX < result.width)
+            {
+                for (int c = 0; c < 3; c++)
+                {
+                    result(newX, y, c) = image(x, y, c);
+                }
+            }
+        }
+    }
+
+    image = result;
+
+    cout << "Skew filter applied successfully!" << endl;
+}
+
     //***/ /***//***//***//***//***//
    void applyMerge(Image& image) {
     string secondFileName;
@@ -44,7 +95,7 @@ void Skew(Image& image)
 }
 
 //***/ /***//***//***//***//***//
-void applyRotate45(Image& image) {
+void applyRotate(Image& image) {
     int angle;
     cout << "Enter rotation angle (90, 180, 270): ";
     cin >> angle;
@@ -89,31 +140,6 @@ void applyRotate45(Image& image) {
         cout << "For 45, 135, 225, 315 degrees, specialized matrix transformation is needed." << endl;
     }
 }
-
-//***/ /***//***//***//***//***//
-
-    for (int y = 0; y < height; y++)
-    {
-        for (int x = 0; x < width; x++)
-        {
-            int newX = x + (height - y) * angle / 100;
-
-            if (newX >= 0 && newX < result.width)
-            {
-                for (int c = 0; c < 3; c++)
-                {
-                    result(newX, y, c) = image(x, y, c);
-                }
-            }
-        }
-    }
-
-    image = result;
-
-    cout << "Skew filter applied successfully!" << endl;
-
-
-
 //***/ /***//***//***//***//***//
 
 void OldTV(Image& image)
@@ -550,23 +576,27 @@ void frameFilter(Image& image)
 //***/ /***//***//***//***//***//
 void resizeFilter(Image& image, int newWidth, int newHeight)
 {
-    Image newImage;
-    newImage.width = newWidth;
-    newImage.height = newHeight;
-    newImage.channels = 3;
-    newImage.imageData = (unsigned char*)malloc(newWidth * newHeight * 3);
-    for (int y = 0; y < newHeight; y++)
+    if (newWidth<= 0||newHeight<= 0)
     {
-        for (int x = 0; x < newWidth; x++)
+        cout <<"Invalid image dimensions!"<<endl;
+        return;
+    }
+
+    Image newImage(newWidth, newHeight);
+
+    for (int y=0; y<newHeight;y++)
+    {
+        for (int x =0; x<newWidth;x++)
         {
-            int oldX = x * image.width / newWidth;
-            int oldY = y * image.height / newHeight;
+            int oldX =x *image.width/newWidth;
+            int oldY =y *image.height/newHeight;
 
             newImage.setPixel(x, y, 0, image.getPixel(oldX, oldY, 0));
             newImage.setPixel(x, y, 1, image.getPixel(oldX, oldY, 1));
             newImage.setPixel(x, y, 2, image.getPixel(oldX, oldY, 2));
         }
     }
+
     image = newImage;
 }
 //***/ /***//***//***//***//***//
@@ -617,7 +647,7 @@ int main(){
     int savechoice=-1;
     
     while(userchoice!=0){
-        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Blur, 10.Infrared, 11.crop, 12.purple, 13.OldTV, 17.Skew, 18.OilPaint, 19.Undo, 20.Redo, 21.load new image, 22.save current image, 0.Exit\n";
+        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Blur, 10.Infrared, 11.crop, 12.purple, 13.OldTV, 14.Rotate, 15.Merge, 17.Skew, 18.OilPaint, 19.Undo, 20.Redo, 21.load new image, 22.save current image, 0.Exit\n";
         cin>>userchoice;
         switch (userchoice)
         {    
@@ -725,6 +755,22 @@ int main(){
                     redoStack.pop();
                 }
                 OldTV(image);
+                break;
+
+            case 14:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                applyRotate(image);
+                break;
+
+            case 15:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                applyMerge(image);
                 break;
 
             case 17:
