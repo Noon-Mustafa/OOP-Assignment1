@@ -4,6 +4,31 @@
 #include <cmath>
 using namespace std;
 
+void sunlight(Image& image){
+  
+    for(int i=0;i<image.height;i++){
+        for(int j=0;j<image.width;j++){
+
+                int red=image(j,i,0);
+                red=red*1.2;
+
+                int green=image(j,i,1);
+                green=green*1.0;
+
+                int blue=image(j,i,2);
+                blue=blue*0.8;
+
+                if (green>255) green=255;
+                if (red>255)  red=255;
+
+                image(j,i,0)=red;
+                image(j,i,1)=green;
+                image(j,i,2)=blue;
+
+            
+        }
+    }
+ //***/ /***//***//***//***//***//
  
 void Skew(Image& image)
 {
