@@ -3,6 +3,81 @@
 #include <stack>
 using namespace std;
 
+void Skew(Image& image)
+{
+    int angle;
+    cout << "Enter skew angle: ";
+    cin >> angle;
+
+    int width = image.width;
+    int height = image.height;
+
+    Image result(width + height, height);
+
+    for (int y = 0; y < result.height; y++)
+    {
+        for (int x = 0; x < result.width; x++)
+        {
+            for (int c = 0; c < 3; c++)
+            {
+                result(x, y, c) = 255;
+            }
+        }
+    }
+
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            int newX = x + (height - y) * angle / 100;
+
+            if (newX >= 0 && newX < result.width)
+            {
+                for (int c = 0; c < 3; c++)
+                {
+                    result(newX, y, c) = image(x, y, c);
+                }
+            }
+        }
+    }
+
+    image = result;
+
+    cout << "Skew filter applied successfully!" << endl;
+}
+
+//***/ /***//***//***//***//***//
+
+void OldTV(Image& image)
+{
+    for (int _y = 0; _y < image.height; _y++)
+    {
+        for (int _x = 0; _x < image.width; _x++)
+        {
+            int red = image.getPixel(_x, _y, 0);
+            int green = image.getPixel(_x, _y, 1);
+            int blue = image.getPixel(_x, _y, 2);
+
+            int newRed = min(255, (red * 11 + green * 2 + blue) / 10);
+            int newGreen = min(255, (red + green * 9 + blue) / 11);
+            int newBlue = min(255, (red + green + blue * 7) / 12);
+
+            if (_y % 2 == 0)
+            {
+                newRed= newRed * 7/10;
+                newGreen= newGreen * 7/10;
+                newBlue= newBlue * 7/10;
+            }
+
+            image.setPixel(_x, _y, 0, newRed);
+            image.setPixel(_x, _y, 1, newGreen);
+            image.setPixel(_x, _y, 2, newBlue);
+        }
+    }
+}
+
+//***/ /***//***//***//***//***//
+
 void purple(Image& image){
 for(int i=0;i<image.height;i++){
 
@@ -474,7 +549,7 @@ int main(){
     int savechoice=-1;
     
     while(userchoice!=0){
-        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Blur, 10.Infrared, 11.crop, 12.purple, 18.OilPaint, 19.Undo, 20.Redo, 21.load new image, 22.save current image, 0.Exit\n";
+        cout<<"Choose filter number: 1.Invert , 2.DarkenLighten , 3.Frame , 4.Resize ,5.Gray, 6.Flip , 7.BlackandWhite, 8.Edge Detection, 9.Blur, 10.Infrared, 11.crop, 12.purple, 13.OldTV, 17.Skew, 18.OilPaint, 19.Undo, 20.Redo, 21.load new image, 22.save current image, 0.Exit\n";
         cin>>userchoice;
         switch (userchoice)
         {    
@@ -576,6 +651,22 @@ int main(){
                 purple(image);
                 break;
     
+            case 13:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                OldTV(image);
+                break;
+
+            case 17:
+                undoStack.push(image);
+                while(!redoStack.empty()) {
+                    redoStack.pop();
+                }
+                Skew(image);
+                break;
+                   
             case 18:
                 undoStack.push(image);
                 while(!redoStack.empty()) {
