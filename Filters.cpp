@@ -91,7 +91,7 @@ void applyRotate45(Image& image) {
 }
 
 //***/ /***//***//***//***//***//
-void skew(Image& image){
+
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
@@ -111,8 +111,8 @@ void skew(Image& image){
     image = result;
 
     cout << "Skew filter applied successfully!" << endl;
-}
-}
+
+
 
 //***/ /***//***//***//***//***//
 
