@@ -23,7 +23,89 @@ void Skew(Image& image)
             }
         }
     }
+   void applyMerge(Image& image) {
+    string secondFileName;
+    cout << "Enter the name of the second image to merge with: ";
+    cin >> secondFileName;
+    
+    Image image2(secondFileName);
+    
+    int newWidth = min(image.width, image2.width);
+    int newHeight = min(image.height, image2.height);
+    
+    for (int i = 0; i < newWidth; ++i) {
+        for (int j = 0; j < newHeight; ++j) {
+            for (int k = 0; k < image.channels; ++k) {
+                image(i, j, k) = (image(i, j, k) + image2(i, j, k)) / 2;
+            }
+        }
+    }
+}
 
+int main() {
+    Image image("luffy.jpg");
+    
+    applyMerge(image);
+    
+    image.saveImage("luffy_merged.jpg");
+    
+    return 0;
+} 
+void applyRotate45(Image& image) {
+    int angle;
+    cout << "Enter rotation angle (90, 180, 270): ";
+    cin >> angle;
+    
+    if (angle == 90) {
+        int oldWidth = image.width;
+        int oldHeight = image.height;
+        Image rotated(oldHeight, oldWidth);
+        for (int i = 0; i < oldWidth; ++i) {
+            for (int j = 0; j < oldHeight; ++j) {
+                for (int k = 0; k < image.channels; ++k) {
+                    rotated(oldHeight - 1 - j, i, k) = image(i, j, k);
+                }
+            }
+        }
+        image = rotated;
+    } else if (angle == 180) {
+        int width = image.width;
+        int height = image.height;
+        Image rotated(width, height);
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
+                for (int k = 0; k < image.channels; ++k) {
+                    rotated(width - 1 - i, height - 1 - j, k) = image(i, j, k);
+                }
+            }
+        }
+        image = rotated;
+    } else if (angle == 270) {
+        int oldWidth = image.width;
+        int oldHeight = image.height;
+        Image rotated(oldHeight, oldWidth);
+        for (int i = 0; i < oldWidth; ++i) {
+            for (int j = 0; j < oldHeight; ++j) {
+                for (int k = 0; k < image.channels; ++k) {
+                    rotated(j, oldWidth - 1 - i, k) = image(i, j, k);
+                }
+            }
+        }
+        image = rotated;
+    } else {
+        cout << "For 45, 135, 225, 315 degrees, specialized matrix transformation is needed." << endl;
+    }
+}
+
+int main() {
+    Image image("luffy.jpg");
+    
+    applyRotate45(image);
+    
+    image.saveImage("luffy_rotated.jpg");
+    
+    return 0;
+}
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
