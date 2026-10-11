@@ -8,7 +8,6 @@ void Skew(Image& image)
     int angle;
     cout << "Enter skew angle: ";
     cin >> angle;
-
     int width = image.width;
     int height = image.height;
 
