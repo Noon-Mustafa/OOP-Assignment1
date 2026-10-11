@@ -23,6 +23,7 @@ void Skew(Image& image)
             }
         }
     }
+    //***/ /***//***//***//***//***//
    void applyMerge(Image& image) {
     string secondFileName;
     cout << "Enter the name of the second image to merge with: ";
@@ -42,15 +43,7 @@ void Skew(Image& image)
     }
 }
 
-int main() {
-    Image image("luffy.jpg");
-    
-    applyMerge(image);
-    
-    image.saveImage("luffy_merged.jpg");
-    
-    return 0;
-} 
+//***/ /***//***//***//***//***//
 void applyRotate45(Image& image) {
     int angle;
     cout << "Enter rotation angle (90, 180, 270): ";
