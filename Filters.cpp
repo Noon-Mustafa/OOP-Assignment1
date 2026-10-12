@@ -28,6 +28,7 @@ void sunlight(Image& image){
             
         }
     }
+}
  //***/ /***//***//***//***//***//
  
 void Skew(Image& image)
