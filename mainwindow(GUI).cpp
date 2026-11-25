@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // ثيم الـ Deep Blue الأنيق
+   
     this->setStyleSheet(
         "QMainWindow {"
         "   background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #0F2027, stop:0.5 #203A43, stop:1 #2C5364);"
