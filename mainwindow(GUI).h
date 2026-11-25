@@ -11,8 +11,6 @@
 #include <iostream>
 using namespace std;
 
-// لو عندك كلاس الصورة الخاص بكي، تأكدي إن التضمين بتاعه هنا (مثلاً #include "image.h")
-// ولنفرض اسم الكلاس Image:
 
 
 QT_BEGIN_NAMESPACE
@@ -42,9 +40,9 @@ private:
     QImage currentImage;
     QString currentFilePath;
 
-    // الـ Stacks الخاصة بالـ Undo والـ Redo
+  
     QVector<QImage> undoStack;
     QVector<QImage> redoStack;
 };
 
-#endif // MAINWINDOW_H
+#endif 
